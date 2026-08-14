@@ -1,0 +1,201 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --bg: 8 8 11;
+    --surface: 255 255 255;
+    --text: 245 245 247;
+    --muted: 160 160 172;
+    --line: 255 255 255;
+    --accent: 224 67 106;
+    --accent-2: 124 83 232;
+    --glass: 255 255 255;
+    --glass-alpha: 0.055;
+    --line-alpha: 0.09;
+    --radius: 28px;
+  }
+
+  html.light {
+    --bg: 248 247 250;
+    --text: 24 24 30;
+    --muted: 92 92 106;
+    --glass: 255 255 255;
+    --glass-alpha: 0.72;
+    --line-alpha: 0.1;
+  }
+
+  html.contrast {
+    --glass-alpha: 0.14;
+    --line-alpha: 0.34;
+    --muted: 216 216 224;
+  }
+  html.light.contrast {
+    --glass-alpha: 1;
+    --line-alpha: 0.4;
+    --muted: 45 45 55;
+  }
+
+  html.large-text { font-size: 18.5px; }
+
+  * { -webkit-tap-highlight-color: transparent; }
+
+  html, body, #root { height: 100%; }
+
+  /* Any element that spills horizontally widens the layout viewport, which in
+     turn stretches every `position: fixed` overlay (age gate, sheets, lock
+     screen) beyond the screen edge on phones. Clip at the root so a single
+     decorative element can never break the modals. */
+  html {
+    overflow-x: hidden;
+  }
+
+  body {
+    overflow-x: hidden;
+    background: rgb(var(--bg));
+    color: rgb(var(--text));
+    font-feature-settings: 'ss01', 'cv01';
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    overscroll-behavior-y: none;
+  }
+
+  ::selection { background: rgb(var(--accent) / .35); }
+
+  /* Focus rings: visible, consistent, never removed */
+  :focus-visible {
+    outline: 2px solid rgb(var(--accent) / .9);
+    outline-offset: 3px;
+    border-radius: 14px;
+  }
+
+  h1, h2, h3, h4 { letter-spacing: -0.03em; }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: .001ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: .001ms !important;
+    }
+  }
+
+  html.reduce-motion *, html.reduce-motion *::before, html.reduce-motion *::after {
+    animation-duration: .001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .08s !important;
+  }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 10px; height: 10px; }
+  ::-webkit-scrollbar-thumb {
+    background: rgb(var(--text) / .14);
+    border-radius: 99px;
+    border: 3px solid transparent;
+    background-clip: content-box;
+  }
+  ::-webkit-scrollbar-track { background: transparent; }
+}
+
+@layer components {
+  .glass {
+    background: rgb(var(--glass) / var(--glass-alpha));
+    border: 1px solid rgb(var(--line) / var(--line-alpha));
+    backdrop-filter: blur(28px) saturate(160%);
+    -webkit-backdrop-filter: blur(28px) saturate(160%);
+  }
+
+  .glass-strong {
+    background: rgb(var(--glass) / calc(var(--glass-alpha) * 2.2));
+    border: 1px solid rgb(var(--line) / calc(var(--line-alpha) * 1.6));
+    backdrop-filter: blur(40px) saturate(180%);
+    -webkit-backdrop-filter: blur(40px) saturate(180%);
+  }
+
+  .text-muted { color: rgb(var(--muted)); }
+
+  .hairline { border-color: rgb(var(--line) / var(--line-alpha)); }
+
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-full font-medium transition-all duration-300;
+    transition-timing-function: cubic-bezier(.22,1,.36,1);
+  }
+  .btn:active { transform: scale(.965); }
+
+  .btn-primary {
+    background: linear-gradient(135deg, #ff6b8b 0%, #e0436a 48%, #a84ae0 100%);
+    color: #fff;
+    box-shadow: 0 12px 34px -14px rgba(224,67,106,.85);
+  }
+  .btn-primary:hover { box-shadow: 0 18px 46px -14px rgba(224,67,106,1); transform: translateY(-1px); }
+
+  .btn-ghost {
+    background: rgb(var(--glass) / calc(var(--glass-alpha) * 1.6));
+    border: 1px solid rgb(var(--line) / var(--line-alpha));
+    color: rgb(var(--text));
+  }
+  .btn-ghost:hover { background: rgb(var(--glass) / calc(var(--glass-alpha) * 3)); }
+
+  .card {
+    @apply rounded-[28px] glass;
+    box-shadow: 0 30px 70px -40px rgba(0,0,0,.8);
+  }
+
+  .chip {
+    @apply inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-medium transition-colors duration-200;
+    background: rgb(var(--glass) / calc(var(--glass-alpha) * 1.8));
+    border: 1px solid rgb(var(--line) / var(--line-alpha));
+  }
+
+  .display {
+    @apply font-semibold leading-[1.02] tracking-[-0.04em];
+  }
+
+  .gradient-text {
+    background: linear-gradient(120deg, #ffb3c6 0%, #ff7a9c 30%, #c69cff 70%, #9bb8ff 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  html.light .gradient-text {
+    background: linear-gradient(120deg, #e0436a 0%, #d2408f 40%, #7c53e8 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .blurred-private {
+    filter: blur(11px);
+    opacity: .55;
+    pointer-events: none;
+    user-select: none;
+  }
+
+  .safe-bottom { padding-bottom: max(env(safe-area-inset-bottom), 0px); }
+
+  /* The mobile tab bar is fixed, so anything scrolled into view programmatically
+     (focus, anchors, .scrollIntoView) must keep clear of it. */
+  @media (max-width: 767px) {
+    a, button, input, textarea, select, [tabindex]:not([tabindex='-1']) {
+      scroll-margin-bottom: 120px;
+      scroll-margin-top: 90px;
+    }
+  }
+
+  /* Ambient orbs are tuned for dark; soften them heavily in light mode
+     so text keeps its contrast against a near-white page. */
+  html.light .atmo-orb { opacity: 0.34; }
+  html.light .atmo-vignette { opacity: 0.25; }
+  html.light .atmo-grain { opacity: 0.02; }
+
+  .no-scrollbar::-webkit-scrollbar { display: none; }
+  .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+}
+
+@layer utilities {
+  .mask-fade-b {
+    -webkit-mask-image: linear-gradient(to bottom, #000 70%, transparent 100%);
+    mask-image: linear-gradient(to bottom, #000 70%, transparent 100%);
+  }
+  .perspective { perspective: 1400px; }
+}
